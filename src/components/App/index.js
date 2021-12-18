@@ -21,7 +21,7 @@ const GlobalStyle = createGlobalStyle`
                 &::-webkit-scrollbar {
                         display: none;      
                 }
-                & ul, li, button, input{
+                & ul, li, button, input, a{
                         all: unset;
 }
   }

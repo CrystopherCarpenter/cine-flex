@@ -1,24 +1,46 @@
 import { useState, useEffect } from "react";
+import { useParams } from 'react-router-dom';
 import { Link } from "react-router-dom";
 import axios from "axios";
 import styled from 'styled-components'
 import Footer from "../Footer/index";
 
 export default function Sessions() {
-        const id = 0;
+        const movieId = useParams();
+        const [movie, setMovie] = useState();
+        const selectedDay = ``;
+        const selectedShowtime = ``;
+
+        useEffect(() => {
+                const promise = axios.get(`https://mock-api.driven.com.br/api/v4/cineflex/movies/${movieId.idFilme}/showtimes`);
+
+                promise.then((answer) => {
+                        setMovie(answer.data);
+                });
+        }, []);
+
+        if (!movie) {
+                return <Span>Carregando...</Span>
+        }
+
         return (
                 <>   <PageTitle>Selecione o horário</PageTitle>
                         <Main>
                                 <ul>
-                                        <Showtime key={id}>
-                                                <p>Quarta-feira - 24/06/2021</p>
-                                                <Times>
-                                                        <li>15:00</li>
-                                                        <li>19:00</li>
-                                                </Times>
-                                        </Showtime>
+                                        {movie.days.map(day => (
+                                                <Days key={day.id}>
+                                                        <p>{day.weekday} - {day.date}</p>
+                                                        <Times>
+                                                                {day.showtimes.map(showtime => (
+                                                                        <Link to={`/assentos/${showtime.id}`}>
+                                                                                <Showtime key={showtime.id}>{showtime.name}</Showtime>
+                                                                        </Link>
+                                                                ))}
+                                                        </Times>
+                                                </Days>
+                                        ))}
                                 </ul>
-                                <Footer>{`One night in Bangkok`}{``}</Footer>
+                                <Footer>{movie}{selectedDay}{selectedShowtime}</Footer>
                         </Main>
                 </>
         )
@@ -37,8 +59,9 @@ const PageTitle = styled.div`
         align-items: center;
         justify-content: center;
         color: #293845;
-        background - color: #FFFFFF;
-        `
+        background-color: #FFFFFF;
+`
+
 const Main = styled.div`
         display: flex;
         align-items: center;
@@ -46,7 +69,8 @@ const Main = styled.div`
         padding: 185px 24px 117px 24px;
 `
 
-const Showtime = styled.li`
+const Days = styled.li`
+        z-index:1;
         p{
                 height: 35px;
                 font-family: Roboto;
@@ -64,20 +88,30 @@ const Times = styled.ul`
         margin: 24 auto;
         display: flex;
         flex-wrap: wrap;
-        li{
-                width: 83px;
-                height: 43px;
-                background: #E8833A;
-                border-radius: 3px;
-                margin-right: 8px;
-                margin-bottom: 8px;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                color: #fff;
-                :hover{
-                        cursor: pointer;
-                        filter: brightness(0.9);
-                }
+`
+
+const Showtime = styled.li`
+        width: 83px;
+        height: 43px;
+        background: #E8833A;
+        border-radius: 3px;
+        margin-right: 8px;
+        margin-bottom: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #fff;
+        :hover{
+                cursor: pointer;
+                filter: brightness(0.9);
         }
+`
+
+const Span = styled.div`
+        width: 250px;
+        text-align: center;
+        position: fixed;
+        top: 200px;
+        left: calc((100% - 250px)/2);
+        font-size: 20px;
 `

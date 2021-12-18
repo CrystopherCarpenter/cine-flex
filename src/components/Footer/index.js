@@ -3,14 +3,14 @@ import axios from "axios";
 import styled from 'styled-components'
 
 export default function Footer({ children }) {
-        const [title, session] = children
+        const [movie, day, showtime] = children
 
         return (
                 <PageFooter>
-                        <FooterImg><img src="https://image.tmdb.org/t/p/w500/i4kPwXPlM1iy8Jf3S1uuLuwqQAV.jpg" alt="" /></FooterImg>
+                        <FooterImg><img src={movie.posterURL} alt={movie.title} /></FooterImg>
                         <FooterTitle>
-                                <p>{title}</p>
-                                <p>{!session ? `` : session} </p>
+                                <p>{movie.title}</p>
+                                <p>{!day ? `` : (day)` - `(showtime)} </p>
                         </FooterTitle>
                 </PageFooter>
         );

@@ -41,7 +41,7 @@ export default function SeatSelection() {
                                 )}
 
                                 <Button>Reservar assento(s)</Button>
-                                <Footer>{`Enola Holmes`}{`Quinta-feira - 19:00`}</Footer>
+                                <Footer>{`      `}{``}</Footer>
                         </Main>
                 </>
         )

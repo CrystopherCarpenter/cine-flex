@@ -9,8 +9,8 @@ export default function Home() {
         useEffect(() => {
                 const promise = axios.get("https://mock-api.driven.com.br/api/v4/cineflex/movies");
 
-                promise.then((res) => {
-                        setMovies(res.data);
+                promise.then((answer) => {
+                        setMovies(answer.data);
                 });
         }, []);
 
