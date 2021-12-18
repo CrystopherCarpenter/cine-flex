@@ -15,34 +15,24 @@ export default function Home() {
         }, []);
 
         if (!movies) {
-                return <span>Carregando...</span>
+                return <Span>Carregando...</Span>
         }
 
         return (
                 <>
                         <PageTitle>Selecione o filme</PageTitle>
-                        <Main>
-                                <Movies>{movies.map((movie) => (
-                                        <Movie key={movie.id}>
-                                                <Link to={`/sessoes/${movie.id}`}>
-                                                        <img src={movie.posterURL} alt={movie.title} />
-                                                </Link>
-                                        </Movie>
-                                ))}
-                                </Movies>
-                        </Main>
+                        <Movies>{movies.map((movie) => (
+                                <Movie key={movie.id}>
+                                        <Link to={`/sessoes/${movie.id}`}>
+                                                <img src={movie.posterURL} alt={movie.title} />
+                                        </Link>
+                                </Movie>
+                        ))}
+                        </Movies>
                 </>
         );
 }
 
-const Main = styled.div`
-        width: 100vw;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        padding-top: 185px;
-        padding-bottom: 117px;
-`
 
 const PageTitle = styled.div`
         position: fixed;
@@ -60,12 +50,15 @@ const PageTitle = styled.div`
 `
 
 const Movies = styled.ul`
+        margin: 0 auto;
         max-width: 50vw;
         row-gap: 11px;
         column-gap: 30px;
         display: flex;
         justify-content: center;
         flex-wrap: wrap;
+        padding-top: 185px;
+        padding-bottom: 117px;
 `
 
 const Movie = styled.li`
@@ -85,4 +78,13 @@ const Movie = styled.li`
         :hover{
                 cursor: pointer;
         }
+`
+
+const Span = styled.div`
+        width: 250px;
+        text-align: center;
+        position: fixed;
+        top: 200px;
+        left: calc((100% - 250px)/2);
+        font-size: 20px;
 `
