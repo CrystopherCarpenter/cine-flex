@@ -1,6 +1,5 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import styled, { createGlobalStyle } from 'styled-components';
-import { Link } from "react-router-dom";
 import Home from "../Home/index";
 import Sessions from "../Sessions/index";
 import SeatSelection from "../SeatSelection/index";
