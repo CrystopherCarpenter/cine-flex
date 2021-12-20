@@ -34,8 +34,10 @@ export default function SeatSelection() {
                 });
         }, []);
 
-        function setSeat(e, seat) {
-                if (request.ids.includes(seat.id)) {
+        function setSeat(seat) {
+                if (!seat.isAvailable) {
+                        alert("Esse assento não está disponível")
+                } else if (request.ids.includes(seat.id)) {
                         request.ids.splice(request.ids.indexOf(seat.id), 1)
                         seats.splice(seats.indexOf(seat.name), 1)
                 } else {
@@ -59,7 +61,7 @@ export default function SeatSelection() {
                         <Main>
                                 <Seats>
                                         {session.seats.map(seat => (
-                                                <Seat key={seat.id} available={seat.isAvailable} selected={request.ids.includes(seat.id) ? true : false} onClick={e => setSeat(e, seat)}>
+                                                <Seat key={seat.id} available={seat.isAvailable} selected={request.ids.includes(seat.id) ? true : false} onClick={() => setSeat(seat)}>
                                                         <p>{seat.name}</p>
                                                 </Seat>
                                         ))}
@@ -148,7 +150,7 @@ const Seat = styled.li`
         align-items: center;
         background: ${props => (props.selected ? `#8DD7CF` : props => props.available ? `#C3CFD9` : `#FBE192`)};
         border: 1px solid ${props => (props.selected ? `#1AAE9E` : props => props.available ? `#7B8B99` : `#F7C52B`)};
-        pointer-events: ${props => (props.available ? `` : `none`)};
+        /*pointer-events: ${props => (props.available ? `` : `none`)};*/                 /*substituto para o alert*/
         :hover{
                 cursor: pointer;
                 filter: brightness(0.9);
