@@ -1,10 +1,14 @@
 import { useState, useEffect } from "react";
+import { useLocation, useParams } from 'react-router-dom';
 import { Link } from "react-router-dom";
-import axios from "axios";
 import styled from 'styled-components'
 
 
 export default function Success() {
+        const params = useLocation();
+
+        console.log(params.state.data)
+
         return (
                 <>
                         <PageTitle>Pedido feito com sucesso!</PageTitle>

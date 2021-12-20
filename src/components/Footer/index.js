@@ -10,7 +10,7 @@ export default function Footer({ children }) {
                         <FooterImg><img src={movie.posterURL} alt={movie.title} /></FooterImg>
                         <FooterTitle>
                                 <p>{movie.title}</p>
-                                <p>{!day ? `` : (day)` - `(showtime)} </p>
+                                <p>{!day ? `` : `${day} - ${showtime}`}</p>
                         </FooterTitle>
                 </PageFooter>
         );

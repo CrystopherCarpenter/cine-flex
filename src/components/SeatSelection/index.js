@@ -1,9 +1,12 @@
 import { useState, useEffect } from "react";
+import { useParams } from 'react-router-dom';
 import { Link } from "react-router-dom";
 import axios from "axios";
 import styled from 'styled-components'
 import Footer from "../Footer/index";
 
+let request = { ids: [], name: ``, cpf: `` };
+let seats = [];
 
 export default function SeatSelection() {
         const legend = [
@@ -11,19 +14,55 @@ export default function SeatSelection() {
                 { text: "Disponível", bgColor: `#C3CFD9`, borderColor: `#7B8B99` },
                 { text: "Indisponível", bgColor: `#FBE192`, borderColor: `#F7C52B` }
         ];
+        const sessionId = useParams();
+        const [session, setSession] = useState();
+        const [renderAux, setRenderAux] = useState(false);
+        const [name, setName] = useState(``);
+        const [CPF, setCPF] = useState(``);
+        const isFilled = name !== `` && CPF !== `` && CPF.length === 14 && request.ids.length > 0
+        let movie = ``;
+        let selectedDay = ``;
+        let selectedShowtime = ``;
 
-        let id = 0;
+        useEffect(() => {
+                request = { ids: [], name: ``, cpf: `` };
+                seats = [];
+                const promise = axios.get(`https://mock-api.driven.com.br/api/v4/cineflex/showtimes/${sessionId.idSessao}/seats`);
 
-        const input = [`Nome`, `CPF`];
+                promise.then((answer) => {
+                        setSession(answer.data);
+                });
+        }, []);
+
+        function setSeat(e, seat) {
+                if (request.ids.includes(seat.id)) {
+                        request.ids.splice(request.ids.indexOf(seat.id), 1)
+                        seats.splice(seats.indexOf(seat.name), 1)
+                } else {
+                        request.ids.push(seat.id)
+                        seats.push(seat.name)
+                }
+                setRenderAux(!renderAux);
+        }
+
+        if (!session) {
+                return <Span>Carregando...</Span>
+        }
+
+        movie = session.movie;
+        selectedDay = session.day.weekday;
+        selectedShowtime = session.name;
 
         return (
                 <>
                         <PageTitle>Selecione o(s) assento(s)</PageTitle>
                         <Main>
                                 <Seats>
-                                        <Seat key={id} available={false} selected={false}>
-                                                <p>01</p>
-                                        </Seat>
+                                        {session.seats.map(seat => (
+                                                <Seat key={seat.id} available={seat.isAvailable} selected={request.ids.includes(seat.id) ? true : false} onClick={e => setSeat(e, seat)}>
+                                                        <p>{seat.name}</p>
+                                                </Seat>
+                                        ))}
                                 </Seats>
                                 <Legend>
                                         {legend.map(legend => (
@@ -33,19 +72,37 @@ export default function SeatSelection() {
                                                 </div>
                                         ))}
                                 </Legend>
-                                {input.map(input =>
-                                        <DivInput>
-                                                <p>{input} do comprador:</p>
-                                                <Input placeholder={`Digite seu ${input === `CPF` ? input : input.toLowerCase()}...`}></Input>
-                                        </DivInput>
-                                )}
-
-                                <Button>Reservar assento(s)</Button>
-                                <Footer>{`      `}{``}</Footer>
+                                <DivInput>
+                                        <p>Nome do comprador:</p>
+                                        <Input placeholder="Digite seu nome" onChange={e => setName(e.target.value)} value={name}></Input>
+                                </DivInput>
+                                <DivInput>
+                                        <p>CPF do comprador:</p>
+                                        <Input placeholder="Digite seu CPF" onChange={e => setCPF(e.target.value)} value={CPF}></Input>
+                                </DivInput>
+                                <Link to={"/sucesso"} state={{ data: [request, seats, session] }}>
+                                        <Button isFilled={isFilled} onClick={() => {
+                                                request.name = name;
+                                                request.cpf = CPF;
+                                                const promise = axios.post(`https://mock-api.driven.com.br/api/v4/cineflex/seats/book-many`, request);
+                                                promise.then((answer) => {
+                                                });
+                                        }}>{isFilled ? `Reservar assento(s)` : `Preencha todos os campos`}</Button>
+                                </Link>
+                                <Footer>{movie}{selectedDay}{selectedShowtime}</Footer>
                         </Main>
                 </>
         )
 }
+
+const Span = styled.div`
+        width: 250px;
+        text-align: center;
+        position: fixed;
+        top: 200px;
+        left: calc((100% - 250px)/2);
+        font-size: 20px;
+`
 
 const Main = styled.div`
         display:flex;
@@ -76,8 +133,8 @@ const Seats = styled.ul`
         flex-wrap: wrap;
         justify-content: center;
         align-items: center;
-        row-gap: 7px;
-        column-gap: 18px;
+        row-gap: 18px;
+        column-gap: 7px;
         margin-bottom: 16px;
 `
 
@@ -91,6 +148,7 @@ const Seat = styled.li`
         align-items: center;
         background: ${props => (props.selected ? `#8DD7CF` : props => props.available ? `#C3CFD9` : `#FBE192`)};
         border: 1px solid ${props => (props.selected ? `#1AAE9E` : props => props.available ? `#7B8B99` : `#F7C52B`)};
+        pointer-events: ${props => (props.available ? `` : `none`)};
         :hover{
                 cursor: pointer;
                 filter: brightness(0.9);
@@ -181,8 +239,10 @@ const Button = styled.button`
         justify-content:center;
         align-items:center;
         color: #fff;
+        pointer-events: ${props => props.isFilled ? `` : `none`};
+        filter: ${props => props.isFilled ? `brightness(1)` : `brightness(1.5)`};
         :hover{
-                cursor: pointer;
-                filter: brightness(0.9);
+                cursor: ${props => props.isFilled ? `pointer` : ``};
+                filter: ${props => props.isFilled ? `brightness(0.9)` : `none`};
                 }
 `
