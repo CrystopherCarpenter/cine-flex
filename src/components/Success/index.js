@@ -1,13 +1,15 @@
-import { useState, useEffect } from "react";
-import { useLocation, useParams } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import { Link } from "react-router-dom";
 import styled from 'styled-components'
 
 
 export default function Success() {
-        const params = useLocation();
-
-        console.log(params.state.data)
+        const { state } = useLocation();
+        const movie = state.session.movie.title;
+        const day = state.session.day.date;
+        const showtime = state.session.name;
+        const name = state.buyer.name;
+        const cpf = state.buyer.cpf;
 
         return (
                 <>
@@ -15,20 +17,23 @@ export default function Success() {
                         <Main>
                                 <div>
                                         <P>Filme e sessão</P>
-                                        <Data>Enola Holmes</Data>
-                                        <Data>24/06/2021 15:00</Data>
+                                        <Data>{movie}</Data>
+                                        <Data>{`${day} ${showtime}`}</Data>
                                 </div>
                                 <div>
                                         <P>ingressos</P>
-                                        <Data>Assento 15</Data>
-                                        <Data>Assento 15</Data>
+                                        {state.seats.map(seat => (
+                                                <Data>Assento {seat}</Data>
+                                        ))}
                                 </div>
                                 <div>
                                         <P>Comprador</P>
-                                        <Data>Nome: João da Silva Sauro</Data>
-                                        <Data>CPF: 123.456.798-10</Data>
+                                        <Data>Nome: {name}</Data>
+                                        <Data>CPF: {cpf}</Data>
                                 </div>
-                                <Button>Voltar para home</Button>
+                                <Link to={"/"}>
+                                        <Button>Voltar para home</Button>
+                                </Link>
                         </Main>
                 </>
         );

@@ -80,7 +80,7 @@ export default function SeatSelection() {
                                         <p>CPF do comprador:</p>
                                         <Input placeholder="Digite seu CPF" onChange={e => setCPF(e.target.value)} value={CPF}></Input>
                                 </DivInput>
-                                <Link to={"/sucesso"} state={{ data: [request, seats, session] }}>
+                                <Link to={"/sucesso"} state={{ buyer: request, seats: seats, session: session }}>
                                         <Button isFilled={isFilled} onClick={() => {
                                                 request.name = name;
                                                 request.cpf = CPF;
