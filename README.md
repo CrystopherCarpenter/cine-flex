@@ -1,7 +1,7 @@
 
 # Cine Flex
 
-A web app to reservate, movies tickets. Just choose you movie, session, seats, get your popcorn and soda and enjoy!
+A web app to reservate movies tickets. Just choose you movie, session, seats, get your popcorn and soda and enjoy!
 
 ## Technologies
 The technologies that were used in this project:<br>
